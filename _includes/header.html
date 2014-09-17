@@ -15,9 +15,11 @@
 	  {% include nav.html %}
       <div class="trigger">
         {% for page in site.pages %}
-          {% if page.title and page.categories == "menu" %}
+	  {% for cat in page.categories %}
+            {% if page.title and cat == "menu" %}
           <a class="page-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
-          {% endif %}
+            {% endif %}
+          {% endfor %}
         {% endfor %}
       </div>
     </nav>
