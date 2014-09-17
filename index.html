@@ -33,12 +33,14 @@ layout: default
         </h2>
       </li>
           {% for cat2 in post.categories %}
+        <li>Checking1: {{ cat2 }}</li>
             {% for page in site.pages %}
-        <li>Checking: {{ page.title }}</li>
+        <li>Checking2: {{ page.title }}</li>
               {% for pcat in page.categories %}
-        <li>Checking: {{ pcat }}</li>
-                {% if page.title and cat2 == pcat %}
+        <li>Checking3: {{ pcat }}</li>
+                {% if cat2 == pcat %}
                   {% for pcat2 in page.categories %}
+        <li>Checking4: {{ pcat2 }}</li>
                     {% if pcat2 == "project" %}
         <li>
           <h3>
