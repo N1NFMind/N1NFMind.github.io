@@ -1,7 +1,7 @@
 ---
 layout: project
 title: SQL CLR - Numbers
-categories: SQL_CLR
+categories: sql_clr
 tags: projects, SQL CLR, Tally, Numbers
 ---
 
