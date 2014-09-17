@@ -35,6 +35,7 @@ layout: default
           {% for page in site.pages %}
       <li>Checking: {{ page.title }}</li>
             {% for pcat in page.categories %}
+      <li>Checking: {{ pcat }}</li>
               {% if page.title and cat == pcat %}
                 {% for pcat2 in page.categories %}
                   {% if pcat2 == "project" %}
