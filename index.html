@@ -9,7 +9,7 @@ layout: default
   <ul class="post-list">
     {% for post in site.posts %}
     
-      {% if post.title and post.categories | first == "post" %}
+      {% if post.title and post.categories[0] == "post" %}
       <li>
         <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
 
@@ -26,7 +26,7 @@ layout: default
   <ul class="post-list">
     {% for post in site.posts %}
     
-      {% if post.title and post.categories | first == "project_category" %}
+      {% if post.title and post.categories[0] %}
       <li>
         <h2>
           <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
