@@ -26,7 +26,7 @@ layout: default
   <ul class="post-list">
     {% for post in site.posts %}
     
-      {% if post.title and post.categories[0] %}
+      {% if post.title and post.categories[0] == "project_category" %}
       <li>
         <h2>
           <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
