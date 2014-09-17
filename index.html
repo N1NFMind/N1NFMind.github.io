@@ -4,14 +4,14 @@ layout: default
 
 <div class="home">
 
-  <h1 class="page-heading">Everything</h1>
+  <h1 class="page-heading">Every thing</h1>
 
   <ul class="post-list">
     {% for post in site.posts %}
     
       <li>
       
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}{{ post.categories }}</span>
+        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}{{ post.categories | first }}</span>
 
         <h2>
           <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
