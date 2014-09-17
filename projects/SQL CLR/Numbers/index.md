@@ -5,7 +5,6 @@ category: SQL CLR
 ---
 
 # Project: SQL CLR - Numbers
-====================
 
 ### Brief note about SQL CLR
 CLR is a very powerful addition to SQL Server, allowing developers to augment the core functionality of the services with their own functionality. When used correctly, this can lead to incredible performance gains of complex queries. When misused, this can hide problems, bog down, or even crash the entire server. Because of the risk, I build all of my SQL CLR projects so that they can be ran in "safe" mode. Refer to CLR Integration Code Access Security (http://msdn.microsoft.com/en-us/library/ms345101.aspx) for more information on why. 
