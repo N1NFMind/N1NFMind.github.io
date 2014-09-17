@@ -9,3 +9,6 @@ github_username:  n1nfmind
 
 # Build settings
 markdown: kramdown
+
+# Outputting
+permalink:     none
