@@ -1,6 +1,7 @@
 ---
 layout: page
 title: About
+categories: menu
 permalink: /about/
 ---
 
