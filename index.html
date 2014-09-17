@@ -4,28 +4,12 @@ layout: default
 
 <div class="home">
 
-  <h1 class="page-heading">Every thing</h1>
-
-  <ul class="post-list">
-    {% for post in site.posts %}
-    
-      <li>
-      
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}{{ post.categories | first }}</span>
-
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-        </h2>
-      </li>
-    {% endfor %}
-  </ul>
-  
   <h1 class="page-heading">Posts</h1>
 
   <ul class="post-list">
     {% for post in site.posts %}
     
-      {% if post.title and page.categories == "post" %}
+      {% if post.title and post.categories | first == "post" %}
       <li>
         <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
 
@@ -42,7 +26,7 @@ layout: default
   <ul class="post-list">
     {% for post in site.posts %}
     
-      {% if post.title and page.categories == "project_category" %}
+      {% if post.title and post.categories | first == "project_category" %}
       <li>
         <h2>
           <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
