@@ -2,6 +2,7 @@
 layout: project
 title: SQL CLR - Numbers
 category: SQL CLR
+permalink: /Project/SQL CLR/Numbers/
 ---
 
 # Project: SQL CLR - Numbers
