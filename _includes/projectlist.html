@@ -32,7 +32,7 @@
         {% if post.title and cat == "project_category" %}
       <li>
         <h2>
-          <a class="projectcategory-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+          <a class="projectcategory-link" href="{{ post.baseurl | prepend: site.baseurl }}">{{ post.title }}</a>
         </h2>
       </li>
           {% for cat2 in post.categories %}
