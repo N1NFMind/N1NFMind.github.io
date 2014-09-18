@@ -1,4 +1,5 @@
 {% if page.project %}
+
   <h1 class="page-heading">Projects</h1>
 
   <ul class="project-list">
@@ -21,9 +22,10 @@
       {% endfor %}
     {% endfor %}
   </ul>
-  <h1 class="page-heading">Project Categories</h1>
   
 {% else %}
+
+  <h1 class="page-heading">Project Categories</h1>
 
   <ul class="project-list">
     {% for post in site.posts %}
@@ -57,4 +59,5 @@
     
     {% endfor %}
   </ul>
+  
 {% endif %}
