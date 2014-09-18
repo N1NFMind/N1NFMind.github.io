@@ -1,5 +1,29 @@
 {% if page.project == "all" %}
+  <h1 class="page-heading">Projects</h1>
+
+  <ul class="project-list">
+    {% for cat2 in page.categories %}
+      {% for pg in site.pages %}
+      
+        {% for pcat in pg.categories %}
+          {% if cat2 == pcat %}
+            {% for pcat2 in pg.categories %}
+              {% if pcat2 == "project" %}
+  <li>
+    <h3>
+      <a class="project-link" href="{{ page.url | prepend: site.baseurl }}">{{ pg.title }}</a>
+    </h3>
+  </li>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    {% endfor %}
+  </ul>
   <h1 class="page-heading">Project Categories</h1>
+  
+{% else %}
 
   <ul class="project-list">
     {% for post in site.posts %}
@@ -31,29 +55,6 @@
         {% endif %}
       {% endfor %}
     
-    {% endfor %}
-  </ul>
-{% else %}
-  <h1 class="page-heading">Projects</h1>
-
-  <ul class="project-list">
-    {% for cat2 in page.categories %}
-      {% for pg in site.pages %}
-      
-        {% for pcat in pg.categories %}
-          {% if cat2 == pcat %}
-            {% for pcat2 in pg.categories %}
-              {% if pcat2 == "project" %}
-  <li>
-    <h3>
-      <a class="project-link" href="{{ page.url | prepend: site.baseurl }}">{{ pg.title }}</a>
-    </h3>
-  </li>
-              {% endif %}
-            {% endfor %}
-          {% endif %}
-        {% endfor %}
-      {% endfor %}
     {% endfor %}
   </ul>
 {% endif %}
