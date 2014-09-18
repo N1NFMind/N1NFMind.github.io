@@ -1,0 +1,33 @@
+  <h1 class="page-heading">Project Categories</h1>
+
+  <ul class="post-list">
+    {% for post in site.posts %}
+      {% for cat in post.categories %}
+        {% if post.title and cat == "project_category" %}
+      <li>
+        <h2>
+          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+        </h2>
+      </li>
+          {% for cat2 in post.categories %}
+            {% for page in site.pages %}
+              {% for pcat in page.categories %}
+                {% if cat2 == pcat %}
+                  {% for pcat2 in page.categories %}
+                    {% if pcat2 == "project" %}
+        <li>
+          <h3>
+            <a class="post-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
+          </h3>
+        </li>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    
+    {% endfor %}
+  </ul>
