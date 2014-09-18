@@ -6,7 +6,7 @@ date:   2014-09-17 11:15
 project: sql_clr
 ---
 
-# Welcom to my SQL CLR Projects!
+# Welcome to my SQL CLR Projects!
 Welcome to my open-source repository for SQL CLR projects! Within this site I have tried to clean up and document some of the utilities that I have built and found useful in my own career. Please feel free to take what you can from them!
 
 ## About SQL CLR
