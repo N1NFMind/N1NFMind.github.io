@@ -12,7 +12,7 @@
               {% if pcat2 == "project" %}
   <li>
     <h3>
-      <a class="project-link" href="{{ page.url | prepend: site.baseurl }}">{{ pg.title }}</a>
+      <a class="project-link" href="{{ pg.url | prepend: site.baseurl }}">{{ pg.title }}</a>
     </h3>
   </li>
               {% endif %}
@@ -45,7 +45,7 @@
                     {% if pcat2 == "project" %}
         <li>
           <h3>
-            <a class="project-link" href="{{ page.url | prepend: site.baseurl }}">{{ pg.title }}</a>
+            <a class="project-link" href="{{ pg.url | prepend: site.baseurl }}">{{ pg.title }}</a>
           </h3>
         </li>
                     {% endif %}
