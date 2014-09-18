@@ -11,4 +11,4 @@ github_username:  n1nfmind
 markdown: kramdown
 
 # Outputting
-permalink:     none
+# permalink: none
