@@ -5,7 +5,6 @@
   <ul class="project-list">
     {% for cat2 in page.categories %}
       {% for pg in site.pages %}
-      
         {% for pcat in pg.categories %}
           {% if cat2 == pcat %}
             {% for pcat2 in pg.categories %}
@@ -28,7 +27,7 @@
   <h1 class="page-heading">Project Categories</h1>
 
   <ul class="project-list">
-    {% for post in site.posts %}
+    {% for post in site.pages %}
       {% for cat in post.categories %}
         {% if post.title and cat == "project_category" %}
       <li>
