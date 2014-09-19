@@ -20,4 +20,4 @@ Because CLR runs in memory both of these function are FAST.
 This project is available from https://github.com/N1NFMind/sqlclr-numbers
 
 ## Installing, Terms of Use, Making Changes, etc.
-Please refer to [SQL CLR]({% site.baseurl "/projects/SQL_CLR/" %}) for information on all this house-keeping stuff.
+Please refer to [SQL CLR]({{ site.baseurl }}/projects/SQL_CLR/) for information on all this house-keeping stuff.
