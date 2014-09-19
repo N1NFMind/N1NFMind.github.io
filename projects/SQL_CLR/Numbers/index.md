@@ -59,34 +59,6 @@ Next, I need to tell the function that it returns a table, so I changed the simp
         TableDefinition = "N INT")]
 ```
 
-public partial class UserDefinedFunctions
-{
-    private struct ReturnValues
-    { public int Value; }
-
-    public static IEnumerable GetNumbers(SqlInt32 MaxValue)
-    {
-        if (MaxValue.IsNull)
-        { yield break; }
-
-        // we do not need the Generic List of <ReturnValues>
-        ReturnValues Vals = new ReturnValues(); // each row
-
-        for (int index = 1; index <= MaxValue.Value; index++)
-        {
-            Vals.Value = index;
-            yield return Vals; // return row per each itteration
-        }
-
-        // we do not need to return everything at once
-    }
-    private static void FillValues(object obj, out SqlInt32 TheValue)
-    {
-        ReturnValues ReturnVals = (ReturnValues)obj;
-        TheValue = ReturnVals.Value;
-    }
-}
-
 Pulling it all together, the code should look like:
 ```
 using System;
