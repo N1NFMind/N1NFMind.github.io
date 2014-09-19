@@ -21,12 +21,120 @@ I have created two simple CLR table value functions to generate a set of numbers
 Because CLR runs in memory both of these function are FAST. 
 
 ## GetNumbers
-{% highlight sql server %}SELECT * FROM GetNumbers(@MaxValue INT) N{% endhighlight %}
-The GetNumbers method returns a list of integers, from 1 to the number specified by `@MaxValue`.
+{% highlight sql %}SELECT * FROM GetNumbers(@MaxValue) Nmbrs{% endhighlight %}
+The GetNumbers method returns a list of integers in a column `N`, from 1 to the number specified by the integer parameter `@MaxValue`.
+
+The CLR code is a very simple use of a table valued function in CLR. To create this, within Microsoft Visual Studio 2013, once I had created my Database Project, I added a new item, a SQL CLR C# User Defined Function. (under "SQL Server >> SQL CLR C#" from the "Add New Item" form)
+
+And here is what I got to start with:
+```
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using Microsoft.SqlServer.Server;
+
+public partial class UserDefinedFunctions
+{
+    [Microsoft.SqlServer.Server.SqlFunction]
+    public static SqlString SqlFunction1()
+    {
+        // Put your code here
+        return new SqlString (string.Empty);
+    }
+}
+```
+
+The first change was to simply add the System.Collections (necessary for creating a table valued user defined function).
+{% highlight Csharp %}
+using System.Collections;
+{% endhighlight %}
+
+Next, I need to tell the function that it returns a table, so I changed the simple `[Microsoft.SqlServer.Server.SqlFunction]` block into something quite a bit more complex.
+```
+    [Microsoft.SqlServer.Server.SqlFunction(DataAccess = DataAccessKind.None,
+        IsDeterministic = true, IsPrecise = true,
+        SystemDataAccess = SystemDataAccessKind.None,
+        FillRowMethodName = "FillValues",
+        TableDefinition = "N INT")]
+```
+
+public partial class UserDefinedFunctions
+{
+    private struct ReturnValues
+    { public int Value; }
+
+    public static IEnumerable GetNumbers(SqlInt32 MaxValue)
+    {
+        if (MaxValue.IsNull)
+        { yield break; }
+
+        // we do not need the Generic List of <ReturnValues>
+        ReturnValues Vals = new ReturnValues(); // each row
+
+        for (int index = 1; index <= MaxValue.Value; index++)
+        {
+            Vals.Value = index;
+            yield return Vals; // return row per each itteration
+        }
+
+        // we do not need to return everything at once
+    }
+    private static void FillValues(object obj, out SqlInt32 TheValue)
+    {
+        ReturnValues ReturnVals = (ReturnValues)obj;
+        TheValue = ReturnVals.Value;
+    }
+}
+
+Pulling it all together, the code should look like:
+```
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using System.Collections;
+using Microsoft.SqlServer.Server;
+{% endhighlight %}
+
+
+public partial class UserDefinedFunctions
+{
+    private struct ReturnValues
+    { public int Value; }
+
+    [Microsoft.SqlServer.Server.SqlFunction(DataAccess = DataAccessKind.None,
+        IsDeterministic = true, IsPrecise = true,
+        SystemDataAccess = SystemDataAccessKind.None,
+        FillRowMethodName = "FillValues",
+        TableDefinition = "N INT")]
+    public static IEnumerable GetNumbers(SqlInt32 MaxValue)
+    {
+        if (MaxValue.IsNull)
+        { yield break; }
+
+        // we do not need the Generic List of <ReturnValues>
+        ReturnValues Vals = new ReturnValues(); // each row
+
+        for (int index = 1; index <= MaxValue.Value; index++)
+        {
+            Vals.Value = index;
+            yield return Vals; // return row per each itteration
+        }
+
+        // we do not need to return everything at once
+    }
+    private static void FillValues(object obj, out SqlInt32 TheValue)
+    {
+        ReturnValues ReturnVals = (ReturnValues)obj;
+        TheValue = ReturnVals.Value;
+    }
+}
+```
 
 ## GetNumbersRange
 ```
-SELECT * FROM GetNumbersRange(@FromValue INT, @ToValue INT) N
+SELECT * FROM GetNumbersRange(@FromValue, @ToValue) Nmbrs
 ```
 
 ### Downloading
