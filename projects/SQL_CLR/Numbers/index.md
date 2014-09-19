@@ -21,9 +21,7 @@ I have created two simple CLR table value functions to generate a set of numbers
 Because CLR runs in memory both of these function are FAST. 
 
 ## GetNumbers
-{% highlight sql server %}
-SELECT * FROM GetNumbers(@MaxValue INT) N
-{% endhighlight %}
+{% highlight sql server %}SELECT * FROM GetNumbers(@MaxValue INT) N{% endhighlight %}
 The GetNumbers method returns a list of integers, from 1 to the number specified by `@MaxValue`.
 
 ## GetNumbersRange
