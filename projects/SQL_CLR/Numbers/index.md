@@ -142,6 +142,30 @@ That's it! Pretty simple for such a powerful tool...
 SELECT * FROM GetNumbersRange(@FromValue, @ToValue) Nmbrs
 ```
 
+```
+public partial class UserDefinedFunctions
+{
+    private struct RangeReturnValues
+    { public int Value; }
+
+    [Microsoft.SqlServer.Server.SqlFunction(DataAccess = DataAccessKind.None,
+        IsDeterministic = true, IsPrecise = true,
+        SystemDataAccess = SystemDataAccessKind.None,
+        FillRowMethodName = "FillRangeValues",
+        TableDefinition = "N INT")]
+    public static IEnumerable GetNumberRange(SqlInt32 FromValue, SqlInt32 ToValue)
+    {
+        if (FromValue.IsNull || ToValue.IsNull)
+        { yield break; }
+
+        for (int index = FromValue.Value; index <= ToValue.Value; index++)
+        { yield return index; }
+    }
+    private static void FillRangeValues(object obj, out SqlInt32 TheValue)
+    { TheValue = (int)obj; }
+}
+```
+
 ### Downloading
 This project is available from https://github.com/N1NFMind/sqlclr-numbers
 
