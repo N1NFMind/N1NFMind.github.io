@@ -2,7 +2,6 @@
 layout: default
 ---
 
-<div class="home">
 
 # This is a header one
 and below...
@@ -11,4 +10,3 @@ and below...
 
   {% include projectlist.html %}
 
-</div>
