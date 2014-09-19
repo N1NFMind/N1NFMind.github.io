@@ -52,12 +52,35 @@ using System.Collections;
 
 Next, I need to tell the function that it returns a table, so I changed the simple `[Microsoft.SqlServer.Server.SqlFunction]` block into something quite a bit more complex.
 ```
-    [Microsoft.SqlServer.Server.SqlFunction(DataAccess = DataAccessKind.None,
-        IsDeterministic = true, IsPrecise = true,
-        SystemDataAccess = SystemDataAccessKind.None,
+    [Microsoft.SqlServer.Server.SqlFunction(IsDeterministic = true, IsPrecise = true,
         FillRowMethodName = "FillValues",
         TableDefinition = "N INT")]
 ```
+The function always will return the same result provided the same input, therefore `[IsDeterministic](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.isdeterministic(v=vs.110).aspx) = true`. The results can be indexed, so `[IsPrecise](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.isdeterministic(v=vs.110).aspx) = true`. The [`FillRowMethodName`](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.fillrowmethodname(v=vs.110).aspx) is a procedure that will be called for each object in the collection (an `IEnumerable`) returned from the method corresponding to the SQL Server function (more on that method in a moment). The [`TableDefinition`](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.tabledefinition(v=vs.110).aspx) is just that, the definition of the table to be returned. 
+
+Our fill row method will get passed an enumerable object, and our row consists of a single column, an integer. So our method declaration should look something like this:
+```
+    private static void FillValues(object obj, out SqlInt32 TheValue)
+    {
+        ...
+    }
+```
+In order for this to work, we need to define our enumerable object type. I am a SQL Server developer, not a .Net developer, so I didn't even attempt to use an existing structure, but instead just created my own.
+```
+    private struct ReturnValues
+    { public int Value; }
+```
+With this structure we can now finish writing the fill row method:
+```
+    private static void FillValues(object obj, out SqlInt32 TheValue)
+    {
+        ReturnValues ReturnVals = (ReturnValues)obj;
+        TheValue = ReturnVals.Value;
+    }
+```
+
+
+
 
 Pulling it all together, the code should look like:
 ```
@@ -67,17 +90,13 @@ using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Collections;
 using Microsoft.SqlServer.Server;
-{% endhighlight %}
-
 
 public partial class UserDefinedFunctions
 {
     private struct ReturnValues
     { public int Value; }
 
-    [Microsoft.SqlServer.Server.SqlFunction(DataAccess = DataAccessKind.None,
-        IsDeterministic = true, IsPrecise = true,
-        SystemDataAccess = SystemDataAccessKind.None,
+    [Microsoft.SqlServer.Server.SqlFunction(IsDeterministic = true, IsPrecise = true,
         FillRowMethodName = "FillValues",
         TableDefinition = "N INT")]
     public static IEnumerable GetNumbers(SqlInt32 MaxValue)
