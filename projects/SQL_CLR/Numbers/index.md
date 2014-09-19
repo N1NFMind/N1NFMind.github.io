@@ -20,6 +20,17 @@ I have created two simple CLR table value functions to generate a set of numbers
 
 Because CLR runs in memory both of these function are FAST. 
 
+## GetNumbers
+'''
+SELECT * FROM GetNumbers(@MaxValue INT) N
+'''
+The GetNumbers method
+
+## GetNumbersRange
+'''
+SELECT * FROM GetNumbersRange(@FromValue INT, @ToValue INT) N
+'''
+
 ### Downloading
 This project is available from https://github.com/N1NFMind/sqlclr-numbers
 
