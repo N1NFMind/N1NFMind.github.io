@@ -46,9 +46,9 @@ public partial class UserDefinedFunctions
 ```
 
 The first change was to simply add the System.Collections (necessary for creating a table valued user defined function).
-{% highlight Csharp %}
+```
 using System.Collections;
-{% endhighlight %}
+```
 
 Next, I need to tell the function that it returns a table, so I changed the simple `[Microsoft.SqlServer.Server.SqlFunction]` block into something quite a bit more complex.
 ```
@@ -56,7 +56,7 @@ Next, I need to tell the function that it returns a table, so I changed the simp
         FillRowMethodName = "FillValues",
         TableDefinition = "N INT")]
 ```
-The function always will return the same result provided the same input, therefore `[IsDeterministic](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.isdeterministic(v=vs.110).aspx) = true`. The results can be indexed, so `[IsPrecise](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.isdeterministic(v=vs.110).aspx) = true`. The [`FillRowMethodName`](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.fillrowmethodname(v=vs.110).aspx) is a procedure that will be called for each object in the collection (an `IEnumerable`) returned from the method corresponding to the SQL Server function (more on that method in a moment). The [`TableDefinition`](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.tabledefinition(v=vs.110).aspx) is just that, the definition of the table to be returned. 
+The function always will return the same result provided the same input, therefore [`IsDeterministic`](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.isdeterministic(v=vs.110).aspx)` = true`. The results can be indexed, so [`IsPrecise`](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.isdeterministic(v=vs.110).aspx)` = true`. The [`FillRowMethodName`](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.fillrowmethodname(v=vs.110).aspx) is a procedure that will be called for each object in the collection (an `IEnumerable`) returned from the method corresponding to the SQL Server function (more on that method in a moment). The [`TableDefinition`](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.tabledefinition(v=vs.110).aspx) is just that, the definition of the table to be returned. 
 
 Our fill row method will get passed an enumerable object, and our row consists of a single column, an integer. So our method declaration should look something like this:
 ```
@@ -65,11 +65,13 @@ Our fill row method will get passed an enumerable object, and our row consists o
         ...
     }
 ```
+
 In order for this to work, we need to define our enumerable object type. I am a SQL Server developer, not a .Net developer, so I didn't even attempt to use an existing structure, but instead just created my own.
 ```
     private struct ReturnValues
     { public int Value; }
 ```
+
 With this structure we can now finish writing the fill row method:
 ```
     private static void FillValues(object obj, out SqlInt32 TheValue)
@@ -79,6 +81,22 @@ With this structure we can now finish writing the fill row method:
     }
 ```
 
+The core method, the entry point to the CLR function, is `GetNumbers`. Because the function returns a table, the method needs to return an [`IEnumerable`](http://msdn.microsoft.com/en-us/library/system.collections.ienumerable(v=vs.110).aspx) object. Also, we know the parameter we want to return is an integer, which maps to a `SqlInt32` data type. So,
+```
+    [Microsoft.SqlServer.Server.SqlFunction]
+    public static SqlString SqlFunction1()
+    {
+        // Put your code here
+        return new SqlString (string.Empty);
+    }
+```
+becomes
+```
+    public static IEnumerable GetNumbers(SqlInt32 MaxValue)
+    {
+        ...
+    }
+```
 
 
 
