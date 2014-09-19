@@ -3,6 +3,10 @@ layout: project
 title: SQL CLR - Numbers
 categories: [sql_clr, project]
 tags: projects, SQL CLR, Tally, Numbers
+project_brief: > 
+  The numbers (or tally) table is an invaluable tool in creating better performing string manipulation within TSQL. In this project, I have created two simple CLR Table Valued Functions to generate a set of numbers: GetNumbers and GetNumberRange
+projectcategory: SQL_CLR
+project: SQL_CLR_Numbers
 ---
 
 # Project: SQL CLR - Numbers
