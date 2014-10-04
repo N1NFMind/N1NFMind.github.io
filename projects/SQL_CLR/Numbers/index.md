@@ -138,16 +138,42 @@ public partial class UserDefinedFunctions
 That's it! Pretty simple for such a powerful tool...
 
 ## GetNumbersRange
+
+Now that we have our `GetNumbers` up and working, we can make enhancements to it. As an example, let's say instead of number from 0 to x we want a range of numbers from x to y. By changing just a couple of lines we can create a `GetNumbersRange` table valued function.
 ```
 SELECT * FROM GetNumbersRange(@FromValue, @ToValue) Nmbrs
 ```
+Obviously we'll need to change the name... and add an additional parameter, so 
+```
+    public static IEnumerable GetNumbers(SqlInt32 MaxValue)
+```
+becomes
+```
+    public static IEnumerable GetNumberRange(SqlInt32 FromValue, SqlInt32 ToValue)
+```
 
+Next, we'll want to break if either parameter is null, so
+```
+        if (MaxValue.IsNull)
+```
+becomes
+```
+        if (FromValue.IsNull || ToValue.IsNull)
+```
+
+Finally, we don't want to go from 1 to our number, but from one number to the other. So
+```
+        for (int index = 1; index <= MaxValue.Value; index++)
+```
+becomes
+```
+        for (int index = FromValue.Value; index <= ToValue.Value; index++)
+```
+
+Pulling these simple changes together gives us our new CLR table valued function.
 ```
 public partial class UserDefinedFunctions
 {
-    private struct RangeReturnValues
-    { public int Value; }
-
     [Microsoft.SqlServer.Server.SqlFunction(DataAccess = DataAccessKind.None,
         IsDeterministic = true, IsPrecise = true,
         SystemDataAccess = SystemDataAccessKind.None,
