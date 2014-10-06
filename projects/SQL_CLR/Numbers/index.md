@@ -39,9 +39,9 @@ Because CLR runs in memory both of these function are FAST.
 
 ## GetNumbers
 
-```
+~~~ SQL
 SELECT * FROM GetNumbers(@MaxValue) Nmbrs
-```
+~~~
 
 The GetNumbers method returns a list of integers in a column `N`, from 1 to the number specified by the integer parameter `@MaxValue`.
 
@@ -49,7 +49,7 @@ The CLR code is a very simple use of a table valued function in CLR. To create t
 
 And here is what I got to start with
 
-~~~
+~~~ SQL
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -69,78 +69,77 @@ public partial class UserDefinedFunctions
 
 The first change was to simply add the System.Collections (necessary for creating a table valued user defined function).
 
-```
+~~~ SQL
 using System.Collections;
-```
+~~~
 
 Next, I need to tell the function that it returns a table, so I changed the simple `[Microsoft.SqlServer.Server.SqlFunction]` block into something quite a bit more complex.
 
-```
+~~~ SQL
     [Microsoft.SqlServer.Server.SqlFunction(DataAccess = DataAccessKind.None,
         IsDeterministic = true, IsPrecise = true,
         SystemDataAccess = SystemDataAccessKind.None,
         FillRowMethodName = "FillValues",
         TableDefinition = "N INT")]
-```
+~~~
 
 The function always will return the same result provided the same input, therefore [`IsDeterministic`](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.isdeterministic(v=vs.110).aspx)` = true`. The results can be indexed, so [`IsPrecise`](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.isdeterministic(v=vs.110).aspx)` = true`. The [`FillRowMethodName`](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.fillrowmethodname(v=vs.110).aspx) is a procedure that will be called for each object in the collection (an `IEnumerable`) returned from the method corresponding to the SQL Server function (more on that method in a moment). The [`TableDefinition`](http://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlfunctionattribute.tabledefinition(v=vs.110).aspx) is just that, the definition of the table to be returned. 
 
 Our fill row method will get passed an enumerable object, and our row consists of a single column, an integer. So our method declaration should look something like this:
 
-```
+~~~ SQL
     private static void FillValues(object obj, out SqlInt32 TheValue)
     {
         ...
     }
-```
+~~~
 
 The fill row method is fairly easy; we will send it an generic object (that is an integer), and it will map this value to a `SqlInt`.
 
-```
+~~~ SQL
     private static void FillValues(object obj, out SqlInt32 TheValue)
     { TheValue = (int)obj; }
-```
+~~~
 
 The core method, the entry point to the CLR function, is `GetNumbers`. Because the function returns a table, the method needs to return an [`IEnumerable`](http://msdn.microsoft.com/en-us/library/system.collections.ienumerable(v=vs.110).aspx) object. Also, we know the parameter we want to return is an integer, which maps to a `SqlInt32` data type. So,
 
-```
-
+~~~ SQL
     [Microsoft.SqlServer.Server.SqlFunction]
     public static SqlString SqlFunction1()
     {
         // Put your code here
         return new SqlString (string.Empty);
     }
-```
+~~~
 
 becomes
 
-```
+~~~ SQL
     public static IEnumerable GetNumbers(SqlInt32 MaxValue)
     {
         ...
     }
-```
+~~~
 
 Within `GetNumbers`, we do two things. First, if we send an invalid value, we want to bail. 
 
-```
+~~~ SQL
         if (MaxValue.IsNull)
         { yield break; }
-```
+~~~
 
 Next, if we haven't yet bailed, we are going to return values from 1 to our number. 
 
-```
+~~~ SQL
         for (int index = 1; index <= MaxValue.Value; index++)
         { yield return index; }
-```
+~~~
 
 The `yield return` allows us to stream data as we calculate it, making more advanced queries and joins against our table valued function work better.
 
 Pulling it all together, the code should look like:
 
-```
+~~~ SQL
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -167,8 +166,7 @@ public partial class UserDefinedFunctions
     private static void FillValues(object obj, out SqlInt32 TheValue)
     { TheValue = (int)obj; }
 }
-
-```
+~~~
 
 That's it! Pretty simple for such a powerful tool...
 
@@ -176,49 +174,49 @@ That's it! Pretty simple for such a powerful tool...
 
 Now that we have our `GetNumbers` up and working, we can make enhancements to it. As an example, let's say instead of number from 0 to x we want a range of numbers from x to y. By changing just a couple of lines we can create a `GetNumbersRange` table valued function.
 
-```
+~~~ SQL
 SELECT * FROM GetNumbersRange(@FromValue, @ToValue) Nmbrs
-```
+~~~
 
 Obviously we'll need to change the name... and add an additional parameter, so 
 
-```
+~~~ SQL
     public static IEnumerable GetNumbers(SqlInt32 MaxValue)
-```
+~~~
 
 becomes
 
-```
+~~~ SQL
     public static IEnumerable GetNumberRange(SqlInt32 FromValue, SqlInt32 ToValue)
-```
+~~~
 
 Next, we'll want to break if either parameter is null, so
 
-```
+~~~ SQL
         if (MaxValue.IsNull)
-```
+~~~
 
 becomes
 
-```
+~~~ SQL
         if (FromValue.IsNull || ToValue.IsNull)
-```
+~~~
 
 Finally, we don't want to go from 1 to our number, but from one number to the other. So
 
-```
+~~~ SQL
         for (int index = 1; index <= MaxValue.Value; index++)
-```
+~~~
 
 becomes
 
-```
+~~~ SQL
         for (int index = FromValue.Value; index <= ToValue.Value; index++)
-```
+~~~
 
 Pulling these simple changes together gives us our new CLR table valued function.
 
-```
+~~~ SQL
 public partial class UserDefinedFunctions
 {
     [Microsoft.SqlServer.Server.SqlFunction(DataAccess = DataAccessKind.None,
@@ -237,7 +235,7 @@ public partial class UserDefinedFunctions
     private static void FillRangeValues(object obj, out SqlInt32 TheValue)
     { TheValue = (int)obj; }
 }
-```
+~~~
 
 ### Downloading
 This project is available from https://github.com/N1NFMind/sqlclr-numbers
