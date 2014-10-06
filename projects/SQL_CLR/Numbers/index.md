@@ -47,7 +47,7 @@ The GetNumbers method returns a list of integers in a column `N`, from 1 to the 
 
 The CLR code is a very simple use of a table valued function in CLR. To create this, within Microsoft Visual Studio 2013, once I had created my Database Project, I added a new item, a SQL CLR C# User Defined Function. (under "SQL Server >> SQL CLR C#" from the "Add New Item" form)
 
-And here is what I got to start with:
+And here is what I got to start with
 
 ```
 using System;
