@@ -49,7 +49,7 @@ The CLR code is a very simple use of a table valued function in CLR. To create t
 
 And here is what I got to start with
 
-```
+~~~
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -65,7 +65,7 @@ public partial class UserDefinedFunctions
     return new SqlString (string.Empty);
   }
 }
-```
+~~~
 
 The first change was to simply add the System.Collections (necessary for creating a table valued user defined function).
 
